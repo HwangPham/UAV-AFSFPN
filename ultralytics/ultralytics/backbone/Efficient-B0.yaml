@@ -1,0 +1,26 @@
+# Parameters
+nc: 5  # Number of classes
+scales:  # Model compound scaling constants
+  n: [0.33, 0.25, 1024]
+  s: [0.33, 0.50, 1024]
+  m: [0.67, 0.75, 1024]
+  l: [1.00, 1.00, 1024]
+  x: [1.00, 1.25, 1024]
+
+# EfficientNet-B0 Backbone
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [32, 3, 2]]  # Stem convolution
+  - [-1, 1, MBConv, [32, 16, 1, 1, 1]]  # MBConv1 (Stage 1)
+  - [-1, 2, MBConv, [16, 24, 6, 2, 2]]  # MBConv6 (Stage 2)
+  - [-1, 2, MBConv, [24, 40, 6, 2, 2]]  # MBConv6 (Stage 3)
+  - [-1, 3, MBConv, [40, 80, 6, 2, 3]]  # MBConv6 (Stage 4)
+  - [-1, 3, MBConv, [80, 112, 6, 1, 3]]  # MBConv6 (Stage 5)
+  - [-1, 4, MBConv, [112, 192, 6, 2, 4]]  # MBConv6 (Stage 6)
+  - [-1, 1, MBConv, [192, 320, 6, 1, 1]]  # MBConv6 (Stage 7)
+  - [-1, 1, Conv, [1280, 1, 1]]  # Final 1x1 convolution layer
+
+# YOLOv8 Head
+head:
+  - [-1, 1, GlobalAveragePool, []]  # Global Average Pooling
+  - [-1, 1, Classify, [nc]]  # Classification head
